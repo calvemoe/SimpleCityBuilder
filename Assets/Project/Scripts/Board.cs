@@ -12,8 +12,13 @@ public class Board : MonoBehaviour {
 		boardStorage[(int)pos.x, (int)pos.z] = toAdd;
 	}
 
-	public bool CheckForBuildinginPosition(Vector3 pos) {								// check if there is no building on desired indexes
-		return boardStorage[(int)pos.x, (int)pos.z] != null;
+	public void RemoveBuilding(Vector3 pos) {
+		Destroy(boardStorage[(int)pos.x, (int)pos.z].gameObject);
+		boardStorage[(int)pos.x, (int)pos.z] = null;
+	}
+
+	public Building CheckForBuildinginPosition(Vector3 pos) {								// check if there is no building on desired indexes
+		return boardStorage[(int)pos.x, (int)pos.z];
 	}
 
 	public Vector3 CalculateGridPosition(Vector3 position) {							// correcting coordinates for right building placement 

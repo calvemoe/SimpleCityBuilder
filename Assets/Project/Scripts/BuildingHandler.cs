@@ -13,39 +13,38 @@ public class BuildingHandler : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetMouseButton(0) && Input.GetKey(KeyCode.LeftShift) && selectedBuilding != null) {	// build selected building by dragging mouse on the Ground
+		if (Input.GetMouseButton(0) && Input.GetKey(KeyCode.LeftShift) && selectedBuilding != null) {	// build selected building by dragging holded MBL on the Ground
 			InteractWithBoard();
-		} else if (Input.GetMouseButtonDown(0) && selectedBuilding != null) {							// build selected building by clicking on ground
+		} else if (Input.GetMouseButtonDown(0) && selectedBuilding != null) {							// build selected building by clicking MBL on ground
 			InteractWithBoard();
+		}
+
+		if (Input.GetMouseButtonDown(1)) {																// on MBR
+			InteractWithBoard(false);																	// destuction mode
 		}
 	}
 
-	void InteractWithBoard() {
+	void InteractWithBoard(bool creation = true) {														// if creation = true - build mode; false - destruction mode;
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit hit;
 		if (Physics.Raycast(ray, out hit)) {															// if there is RaycastHit 
 			Vector3 gridPosition = board.CalculateGridPosition(hit.point);								// calculate corret position for buildings grid based on clicked position
-			if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() 				// check if not pointed on ui object
-				&& !board.CheckForBuildinginPosition(gridPosition)) {									// if no building on pointed spot
-				if (city.Money >= selectedBuilding.cost) {												// if enought money for building
-					city.CalculateSpentMoney(selectedBuilding.cost);									// substract cost from Money
-					if (selectedBuilding.id != 0) {
-						city.buildingCounts[selectedBuilding.id]++;
-						switch (selectedBuilding.id) {													// for UI update
-							case City.house :
-								city.CalculatePopulationCeiling();
-								break;
-							case City.farm :
-								city.CalculateFoodIncome();
-								break;	
-							case City.factory :
-								city.CalculateJobCeiling();
-								break;
-							default:
-								break;
+			if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) { 				// check if not pointed on ui object
+				if (creation && board.CheckForBuildinginPosition(gridPosition) == null) {							// if no building on pointed spot
+					if (city.Money >= selectedBuilding.cost) {											// if enought money for building
+						city.CalculateSpentMoney(selectedBuilding.cost);								// substract cost from Money
+						if (selectedBuilding.id != 0) {
+							city.buildingCounts[selectedBuilding.id]++;
+							UpdatingAfterInteraction(selectedBuilding.id);
 						}
+						board.AddBuilding(selectedBuilding, gridPosition);								// adding selected building on pointed spot
 					}
-					board.AddBuilding(selectedBuilding, gridPosition);										// adding selected building on pointed spot
+				}
+				else if (!creation && board.CheckForBuildinginPosition(gridPosition) != null) {
+					city.buildingCounts[board.CheckForBuildinginPosition(gridPosition).id]--;
+					UpdatingAfterInteraction(board.CheckForBuildinginPosition(gridPosition).id);
+					city.CalculateRefundMoney(board.CheckForBuildinginPosition(gridPosition).cost);
+					board.RemoveBuilding(gridPosition);
 				}
 			}
 		}
@@ -53,5 +52,21 @@ public class BuildingHandler : MonoBehaviour {
 
 	public void EnableBuilder(int building) {															// select needed building
 		selectedBuilding = buildings[building];
+	}
+
+	void UpdatingAfterInteraction(int biuldingId) {														// for UI update
+		switch (biuldingId) {
+			case City.house :
+				city.CalculatePopulationCeiling();
+				break;
+			case City.farm :
+				city.CalculateFoodIncome();
+				break;	
+			case City.factory :
+				city.CalculateJobCeiling();
+				break;
+			default:
+				break;
+		}
 	}
 }

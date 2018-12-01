@@ -11,10 +11,10 @@ public class City : MonoBehaviour {
     public float foodConsumingPerOnePeople = 0.5f;      // amount of food consumed per one people per one Day
     public float foodFromOnePeole = 2.5f;               // food gain after one people has to be eaten
     public float foodSafety = 2f;                       // safety multiplier for people population increasing
-    public float badMoralePenalty = 0.33f;              // penalty to Money increasing from canibalizm
+    public float badMoralePenalty = 0.33f;              // penalty to Money increasing from cannibalizm
     public float goodMoraleBonus = 1.2f;                // bonus to Money increasing 
     public float staticPopulationRate = 0.025f;         // passive value for population incresing if there enough food
-    public int canibalizmCooldown = 3;                  // 3 days cooldown before morale stabilize after canibalizm act
+    public int cannibalizmCooldown = 3;                  // 3 days cooldown before morale stabilize after cannibalizm act
 
     public int Day { get; set; }
 
@@ -40,9 +40,9 @@ public class City : MonoBehaviour {
     //temporary effects switch
     private bool badMorale = false;                     // true - bad morale effect active - redure Money income
     private bool goodMorale = false;                    // true - good morale effect active - increase Money income
-    private bool canibalizm = false;                    // true - if Food < FoodConsuming and people were eaten     // todo: if we need it?
+    private bool cannibalizm = false;                    // true - if Food < FoodConsuming and people were eaten     // todo: if we need it?
 
-    private int canibalizmPenaltiTimer = 0;             // on '0' - bad morale after canibalizm is gone
+    private int cannibalizmPenaltiTimer = 0;             // on '0' - bad morale after cannibalizm is gone
 
     // maximim values
     private const int maxMoney = 1000000;
@@ -79,10 +79,10 @@ public class City : MonoBehaviour {
         CalculateMoney();
         CalculateFoodFromFarm();
         CalculatePopulation();
-        if (canibalizm) {
+        if (cannibalizm) {
             CalculateJobs();
             CalculateFoodConsuming();
-            canibalizm = false;
+            cannibalizm = false;
         }
         MoraleReview();
         textUpdate();
@@ -119,6 +119,11 @@ public class City : MonoBehaviour {
         uIController.UpdateMoney(Money, Income);
     }
 
+    public void CalculateRefundMoney(int refund) {
+        Money += refund / 2;
+        uIController.UpdateMoney(Money, Income);
+    }
+
     private void CalculateJobs() {                                  // called if PopulationCurrent was changed
         JobCurrent = Mathf.Min((int)PopulationCurrent, CalculateJobCeiling());
     }
@@ -140,10 +145,10 @@ public class City : MonoBehaviour {
             int loosingPeople = (int)PopulationCurrent / 10;
             if ((int)PopulationCurrent % 10 != 0)
                 loosingPeople++;
-            canibalizm = true;
-            canibalizmPenaltiTimer = canibalizmCooldown;
+            cannibalizm = true;
+            cannibalizmPenaltiTimer = cannibalizmCooldown;
             PopulationCurrent -= loosingPeople;
-            if (PopulationCurrent < 1)
+            if (PopulationCurrent <= 1) 
                 PopulationCurrent = 1;
             Food = loosingPeople * foodFromOnePeole;
         }
@@ -170,12 +175,12 @@ public class City : MonoBehaviour {
     }
 
     private float CalculateFoodConsuming() {                        // called if PopulationCurrent was changed
-        FoodConsuming = PopulationCurrent > 1 ?  PopulationCurrent * foodConsumingPerOnePeople : 0;
+        FoodConsuming = PopulationCurrent >= 2 ?  PopulationCurrent * foodConsumingPerOnePeople : 0;
         return FoodConsuming;
     }
 
     private void MoraleReview() {                                   // called at the end of day
-        if (canibalizmPenaltiTimer > 0) {
+        if (cannibalizmPenaltiTimer > 0) {
             badMorale = true;
             goodMorale = false;
         } 
@@ -186,7 +191,7 @@ public class City : MonoBehaviour {
             badMorale = false;
             goodMorale = false;
         }
-        canibalizmPenaltiTimer--;
+        cannibalizmPenaltiTimer--;
     }
 
     private void textUpdate() {                                     // called at the end of day
