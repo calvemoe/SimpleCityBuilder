@@ -11,31 +11,24 @@ public class UIController : MonoBehaviour {
     public Text PopulationText;
     public Text JobText;
 
-	private City city;
-
-	// Use this for initialization
-	void Start () {
-		city = FindObjectOfType<City>();
+	public void UpdateDay(int Day = 1) {
+		DayText.text = "Day " + Day;
 	}
 
-	public void UpdateDay() {
-		DayText.text = "Day " + city.Day;
+	public void UpdateJob(int JobCurrent = 0, int JobCeiling = 0) {
+		JobText.text = "Jobs:\t\t\t" + JobCurrent + "/" + JobCeiling;
 	}
 
-	public void UpdateJob() {
-		JobText.text = "Jobs:\t\t" + city.JobCurrent + "/" + city.JobCeiling;
+	public void UpdateMoney(int Money = 0, float Income = 0) {
+		MoneyText.text = "Money:\t\t\t$" + Money + " (+$" + (int)Income + ")";
 	}
 
-	public void UpdateMoney() {
-		MoneyText.text = "Money:\t\t$" + city.Money + " (+$" + (int)city.Income + ")";
+	public void UpdateFood(float Food = 0, float FoodConsuming = 0, float FoodIncome = 0) {
+		FoodText.text = "Food:\t\t\t" + Food.ToString("F1") + " (-" + FoodConsuming.ToString("F1") + ")/(+" + FoodIncome + ")";
 	}
 
-	public void UpdateFood() {
-		FoodText.text = "Food:\t\t" + (int)city.Food + " (-" + Mathf.RoundToInt(city.FoodConsuming) + ")";
-	}
-
-	public void UpdatePopulation() {
-		PopulationText.text = "Population:\t" + (int)city.PopulationCurrent + "/" + city.PopulationCeiling;
+	public void UpdatePopulation(float PopulationCurrent = 1, int PopulationCeiling = 1) {
+		PopulationText.text = "Population:\t" + (int)PopulationCurrent + "/" + PopulationCeiling;
 	}
 
 	public void SetRed() {

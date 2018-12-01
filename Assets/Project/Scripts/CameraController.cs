@@ -8,27 +8,24 @@ public class CameraController : MonoBehaviour {
     private Vector3 offsetDragging;
     private bool dragging;
 
-    private void LateUpdate()
-    {
+    private void LateUpdate() {
+        // scrolling with boundary values
         Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize -= Input.GetAxis("Mouse ScrollWheel") * Camera.main.orthographicSize, 
             2.5f, 15f);
 
-        if (Input.GetMouseButton(2))
-        {
+        // if mouse wheel pressed - enable dragging
+        if (Input.GetMouseButton(2)) {          
             offsetDragging = (Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position);
-            if (!dragging)
-            {
+            if (!dragging) {
                 dragging = true;
                 mouseOriginPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             }
-
         }
-        else
-        {
+        else 
             dragging = false;
-        }
-        if (dragging)
-        {
+        
+        // apply mouse movement while dragging
+        if (dragging) {
             transform.position = mouseOriginPoint - offsetDragging;
         }
     }

@@ -150,7 +150,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 151.80002, y: -31}
-  m_SizeDelta: {x: 303.59998, y: 62}
+  m_SizeDelta: {x: 304.5, y: 62}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &21786734
 MonoBehaviour:
@@ -253,7 +253,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 235.35, y: -31}
+  m_AnchoredPosition: {x: 236.25, y: -31}
   m_SizeDelta: {x: 116.5, y: 42}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &26933743
@@ -394,8 +394,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 102.025, y: -18}
-  m_SizeDelta: {x: 186.68, y: 16}
+  m_AnchoredPosition: {x: 161.65, y: -18.5}
+  m_SizeDelta: {x: 303.3, y: 17}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &212318366
 MonoBehaviour:
@@ -409,7 +409,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -418,7 +418,7 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
+    m_FontSize: 16
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 1
@@ -982,7 +982,7 @@ GameObject:
   - component: {fileID: 544181305}
   - component: {fileID: 544181304}
   m_Layer: 5
-  m_Name: Button
+  m_Name: TurnButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1004,8 +1004,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 88.55, y: -31}
-  m_SizeDelta: {x: 157.1, y: 42}
+  m_AnchoredPosition: {x: 89, y: -31}
+  m_SizeDelta: {x: 158, y: 42}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &544181304
 MonoBehaviour:
@@ -1344,8 +1344,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 102.025, y: -96}
-  m_SizeDelta: {x: 184.4, y: 16}
+  m_AnchoredPosition: {x: 161.65001, y: -99.5}
+  m_SizeDelta: {x: 303.3, y: 17}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &976320157
 MonoBehaviour:
@@ -1359,7 +1359,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1368,7 +1368,7 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
+    m_FontSize: 16
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
@@ -1425,8 +1425,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -102.08, y: 57}
-  m_SizeDelta: {x: 204.05, y: 114}
+  m_AnchoredPosition: {x: -162.4, y: 57}
+  m_SizeDelta: {x: 324.7, y: 118}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1033077311
 MonoBehaviour:
@@ -1444,7 +1444,7 @@ MonoBehaviour:
     m_Right: 10
     m_Top: 10
     m_Bottom: 10
-  m_ChildAlignment: 7
+  m_ChildAlignment: 3
   m_Spacing: 10
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
@@ -1671,7 +1671,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   city: {fileID: 1102907643}
-  uIController: {fileID: 1102907645}
   buildings:
   - {fileID: 114923297300202846, guid: 02a0038313623cc419c914fd75bf37fd, type: 2}
   - {fileID: 114177709304601782, guid: 9240109f17177a94096908fe8bc10a0d, type: 2}
@@ -1723,12 +1722,12 @@ MonoBehaviour:
   houseCapacity: 5
   foodConsumingPerOnePeople: 0.5
   foodFromOnePeole: 2.5
-  foodSafety: 1.5
+  foodSafety: 2
   badMoralePenalty: 0.33
-  goodMoraleBonus: 1.5
+  goodMoraleBonus: 1.2
   staticPopulationRate: 0.025
-  canibalizmCooldown: 4
-  buildingCounts: 000000000000000000000000
+  canibalizmCooldown: 3
+  buildingCounts: 00000000000000000000000000000000
 --- !u!4 &1102907644
 Transform:
   m_ObjectHideFlags: 0
@@ -1852,8 +1851,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 102.025, y: -44}
-  m_SizeDelta: {x: 184.15, y: 16}
+  m_AnchoredPosition: {x: 161.65001, y: -45.5}
+  m_SizeDelta: {x: 303.3, y: 17}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1407740914
 MonoBehaviour:
@@ -1867,7 +1866,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1876,7 +1875,7 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
+    m_FontSize: 16
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 1
@@ -2152,8 +2151,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 102.025, y: -70}
-  m_SizeDelta: {x: 184.4, y: 16}
+  m_AnchoredPosition: {x: 161.65004, y: -72.5}
+  m_SizeDelta: {x: 303.3, y: 17}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2016973229
 MonoBehaviour:
@@ -2167,7 +2166,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -2176,7 +2175,7 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
+    m_FontSize: 16
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 1
