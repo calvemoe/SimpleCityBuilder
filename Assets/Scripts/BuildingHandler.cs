@@ -29,8 +29,10 @@ public class BuildingHandler : MonoBehaviour {
 		RaycastHit hit;
 		if (Physics.Raycast(ray, out hit)) {															// if there is RaycastHit 
 			Vector3 gridPosition = board.CalculateGridPosition(hit.point);								// calculate corret position for buildings grid based on clicked position
+			if (gridPosition.x < 1 || gridPosition.x > 99 || gridPosition.z < 1 || gridPosition.z > 99)
+				return;
 			if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) { 				// check if not pointed on ui object
-				if (creation && board.CheckForBuildinginPosition(gridPosition) == null) {							// if no building on pointed spot
+				if (creation && board.CheckForBuildinginPosition(gridPosition) == null) {				// if no building on pointed spot
 					if (city.Money >= selectedBuilding.cost) {											// if enought money for building
 						city.CalculateSpentMoney(selectedBuilding.cost);								// substract cost from Money
 						if (selectedBuilding.id != 0) {

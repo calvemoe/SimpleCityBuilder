@@ -17,7 +17,7 @@ public class Board : MonoBehaviour {
 		boardStorage[(int)pos.x, (int)pos.z] = null;
 	}
 
-	public Building CheckForBuildinginPosition(Vector3 pos) {								// check if there is no building on desired indexes
+	public Building CheckForBuildinginPosition(Vector3 pos) {							// check if there is no building on desired indexes
 		return boardStorage[(int)pos.x, (int)pos.z];
 	}
 

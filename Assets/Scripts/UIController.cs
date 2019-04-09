@@ -5,11 +5,16 @@ using UnityEngine.UI;
 
 public class UIController : MonoBehaviour {
 
-    public Text DayText;
-    public Text MoneyText;
-    public Text FoodText;
-    public Text PopulationText;
-    public Text JobText;
+	[SerializeField]
+    private Text DayText;
+	[SerializeField]
+    private Text MoneyText;
+	[SerializeField]
+    private Text FoodText;
+	[SerializeField]
+    private Text PopulationText;
+	[SerializeField]
+    private Text JobText;
 
 	public void UpdateDay(int Day = 1) {
 		DayText.text = "Day " + Day;

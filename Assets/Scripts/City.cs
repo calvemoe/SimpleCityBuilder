@@ -9,12 +9,12 @@ public class City : MonoBehaviour {
     public int jobsPerFactory = 10;                     // number of jobs per one factory - extend JobCeiling
     public int houseCapacity = 5;                       // number of people per one house - extend PopulationCeiling
     public float foodConsumingPerOnePeople = 0.5f;      // amount of food consumed per one people per one Day
-    public float foodFromOnePeole = 2.5f;               // food gain after one people has to be eaten
+    public float foodFromOnePeople = 2.5f;              // food gain after one people has to be eaten
     public float foodSafety = 2f;                       // safety multiplier for people population increasing
     public float badMoralePenalty = 0.33f;              // penalty to Money increasing from cannibalizm
     public float goodMoraleBonus = 1.2f;                // bonus to Money increasing 
     public float staticPopulationRate = 0.025f;         // passive value for population incresing if there enough food
-    public int cannibalizmCooldown = 3;                  // 3 days cooldown before morale stabilize after cannibalizm act
+    public int cannibalizmCooldown = 5;                 // 3 days cooldown before morale stabilize after cannibalizm act
 
     public int Day { get; set; }
 
@@ -30,7 +30,7 @@ public class City : MonoBehaviour {
     public float FoodConsuming { get; set; }            // amount of food consuming per Day = PopulationCurrent * foodConsumingPerOnePeople
 
     // buildings storing array
-    public int[] buildingCounts = new int[4];            // 0 - road, 1 - house, 2 - farm, 3 - factory
+    public int[] buildingCounts = new int[4];           // 0 - road, 1 - house, 2 - farm, 3 - factory
 
     // using for buildingCounts access to appropriate values
     public const int house = 1;
@@ -40,17 +40,17 @@ public class City : MonoBehaviour {
     //temporary effects switch
     private bool badMorale = false;                     // true - bad morale effect active - redure Money income
     private bool goodMorale = false;                    // true - good morale effect active - increase Money income
-    private bool cannibalizm = false;                    // true - if Food < FoodConsuming and people were eaten     // todo: if we need it?
+    private bool cannibalizm = false;                   // true - if Food < FoodConsuming and people were eaten     // todo: if we need it?
 
-    private int cannibalizmPenaltiTimer = 0;             // on '0' - bad morale after cannibalizm is gone
+    private int cannibalizmPenaltiTimer = 0;            // on '0' - bad morale after cannibalizm is gone
 
-    // maximim values
-    private const int maxMoney = 1000000;
-    private const int maxIncome = 99998;
-    private const float maxFood = 1000000f;
-    private const float maxFoodIncome = 50000f;
-    private const int maxPopulation = 1000000;
-    private const int maxJobs = 999900;
+    // maximum values
+    private const int MAX_MONEY = 1000000;
+    private const int MAX_INCOME = 99998;
+    private const float MAX_FOOD = 1000000f;
+    private const float MAX_FOOD_INCOME = 50000f;
+    private const int MAX_POPULATION = 1000000;
+    private const int MAX_JOBS = 999900;
 
     private UIController uIController;
 
@@ -69,10 +69,15 @@ public class City : MonoBehaviour {
     }
 
     public void EndTurn() {                                         // called by OnClick() - TurnButton
+        
         if (PopulationCeiling == 0) {
             PopulationCeiling = 1;
             PopulationCurrent = 1;
         }
+        else if (PopulationCeiling != 0 && PopulationCurrent == 0) {
+            PopulationCurrent = 1;
+        }
+
         Day++;
         CalculateFoodConsuming();
         CalculateJobs();
@@ -85,36 +90,36 @@ public class City : MonoBehaviour {
             cannibalizm = false;
         }
         MoraleReview();
-        textUpdate();
+        TextUpdate();
     }
 
-    public int CalculatePopulationCeiling() {                       // called only if house was built
+    public int CalculatePopulationCeiling() {                       // called only if house was built or sold
         PopulationCeiling = buildingCounts[house] * houseCapacity;
-        if (PopulationCeiling > maxPopulation)
-            PopulationCeiling = maxPopulation;
+        if (PopulationCeiling > MAX_POPULATION)
+            PopulationCeiling = MAX_POPULATION;
         if (PopulationCeiling < PopulationCurrent)
             CalculatePopulation(true);
 		uIController.UpdatePopulation(PopulationCurrent, PopulationCeiling);
         return PopulationCeiling;
     }
 
-    public int CalculateJobCeiling() {                              // called only if factory was built
+    public int CalculateJobCeiling() {                              // called only if factory was built or sold
         JobCeiling = buildingCounts[factory] * jobsPerFactory;
-        if (JobCeiling > maxJobs)
-            JobCeiling = maxJobs;
+        if (JobCeiling > MAX_JOBS)
+            JobCeiling = MAX_JOBS;
             uIController.UpdateJob(JobCurrent, JobCeiling);
         return JobCeiling;
     }
 
-    public float CalculateFoodIncome() {                            // called only if farm was built
+    public float CalculateFoodIncome() {                            // called only if farm was built or sold
         FoodIncome = buildingCounts[farm] * foodPerFarm;
-        if (FoodIncome > maxFoodIncome)
-            FoodIncome = maxFoodIncome;
+        if (FoodIncome > MAX_FOOD_INCOME)
+            FoodIncome = MAX_FOOD_INCOME;
         uIController.UpdateFood(Food, FoodConsuming, FoodIncome);
         return FoodIncome;
     }
 
-    public void CalculateSpentMoney(int spent) {                    // called only if any buylding was built
+    public void CalculateSpentMoney(int spent) {                    // called only if any buylding was built or sold
         Money -= spent;
         uIController.UpdateMoney(Money, Income);
     }
@@ -130,8 +135,8 @@ public class City : MonoBehaviour {
 
     private void CalculateMoney() {                                 // called at the end of day
         Money += Mathf.RoundToInt(CalculateMoneyIncome());
-        if (Money > maxMoney)
-            Money = maxMoney;
+        if (Money > MAX_MONEY)
+            Money = MAX_MONEY;
     }
 
     private void CalculatePopulation(bool trimCeiling = false) {    // called at the end of day or happens that PopulationCurrent > PopulationCeiling
@@ -148,34 +153,33 @@ public class City : MonoBehaviour {
             cannibalizm = true;
             cannibalizmPenaltiTimer = cannibalizmCooldown;
             PopulationCurrent -= loosingPeople;
-            if (PopulationCurrent <= 1) 
-                PopulationCurrent = 1;
-            Food = loosingPeople * foodFromOnePeole;
+
+            Food = loosingPeople * foodFromOnePeople;
         }
         if (PopulationCurrent > PopulationCeiling)
             PopulationCurrent = PopulationCeiling;
     }
 
-    private float ApplyMorale() {                                   // modifyed increasing of Population and Income
+    private float ApplyMorale() {                                   // affect Population incrising and Income
         return (badMorale ? badMoralePenalty : 1f)                  // sets badMoralePenalty if badMorale = true
         * (goodMorale ? goodMoraleBonus : 1f);                      // sets goodMoralePenalty if goodMorale = true
     }
 
     private float CalculateMoneyIncome() {                          // called at the end of day
         Income = JobCurrent * moneyPerJob * ApplyMorale();
-        if (Income > maxIncome)
-            Income = maxIncome;
+        if (Income > MAX_INCOME)
+            Income = MAX_INCOME;
         return Income;
     }
 
     private void CalculateFoodFromFarm() {                          // called at the end of day
         Food += FoodIncome;
-        if (Food > maxFood)
-            Food = maxFood;
+        if (Food > MAX_FOOD)
+            Food = MAX_FOOD;
     }
 
     private float CalculateFoodConsuming() {                        // called if PopulationCurrent was changed
-        FoodConsuming = PopulationCurrent >= 2 ?  PopulationCurrent * foodConsumingPerOnePeople : 0;
+        FoodConsuming = PopulationCurrent >= 2 ?  PopulationCurrent * foodConsumingPerOnePeople : 0;           // if PopulationCurrent < 2 - FoodConsuling = 0
         return FoodConsuming;
     }
 
@@ -194,7 +198,7 @@ public class City : MonoBehaviour {
         cannibalizmPenaltiTimer--;
     }
 
-    private void textUpdate() {                                     // called at the end of day
+    private void TextUpdate() {                                     // called at the end of day
         uIController.UpdateMoney(Money, Income);
         uIController.UpdateDay(Day);
         uIController.UpdateFood(Food, FoodConsuming, FoodIncome);
