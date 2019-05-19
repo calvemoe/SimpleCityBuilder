@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -58,17 +59,17 @@ public class BuildingHandler : MonoBehaviour {
 
 	void UpdatingAfterInteraction(int biuldingId) {														// for UI update
 		switch (biuldingId) {
-			case City.house :
+			case (int)City.buildingsList.house :
 				city.CalculatePopulationCeiling();
 				break;
-			case City.farm :
+			case (int)City.buildingsList.farm :
 				city.CalculateFoodIncome();
 				break;	
-			case City.factory :
+			case (int)City.buildingsList.factory :
 				city.CalculateJobCeiling();
 				break;
 			default:
-				break;
+				throw new ArgumentException();
 		}
 	}
 }
