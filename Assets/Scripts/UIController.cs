@@ -10,41 +10,74 @@ public class UIController : MonoBehaviour {
 	[SerializeField]
     private Text MoneyText;
 	[SerializeField]
+    private Text IncomeText;
+	[SerializeField]
     private Text FoodText;
+	[SerializeField]
+    private Text FoodIncomeText;
+	[SerializeField]
+    private Text FoodOutcomeText;
 	[SerializeField]
     private Text PopulationText;
 	[SerializeField]
+    private Text PopulationCeilingText;
+	[SerializeField]
     private Text JobText;
+	[SerializeField]
+    private Text JobCeilingText;
 
 	public void UpdateDay(int Day = 1) {
-		DayText.text = "Day " + Day;
+		DayText.text = Day.ToString();
 	}
 
-	public void UpdateJob(int JobCurrent = 0, int JobCeiling = 0) {
-		JobText.text = "Jobs:\t\t\t" + JobCurrent + "/" + JobCeiling;
+	public void UpdateJob(int JobCurrent = 0) {
+		JobText.text = JobCurrent.ToString();
 	}
 
-	public void UpdateMoney(int Money = 0, float Income = 0) {
-		MoneyText.text = "Money:\t\t\t$" + Money + " (+$" + (int)Income + ")";
+	public void UpdateJobCeiling(int JobCeiling = 0) {
+		JobCeilingText.text = JobCeiling.ToString();
 	}
 
-	public void UpdateFood(float Food = 0, float FoodConsuming = 0, float FoodIncome = 0) {
-		FoodText.text = "Food:\t\t\t" + Food.ToString("F1") + " (-" + FoodConsuming.ToString("F1") + ")/(+" + FoodIncome + ")";
+	public void UpdateMoney(int Money = 0) {
+		MoneyText.text = Money.ToString();
 	}
 
-	public void UpdatePopulation(float PopulationCurrent = 1, int PopulationCeiling = 1) {
-		PopulationText.text = "Population:\t" + (int)PopulationCurrent + "/" + PopulationCeiling;
+	public void UpdateIncome(float Income = 0) {
+		IncomeText.text = Income.ToString();
+	}
+
+	public void UpdateFood(float Food = 0) {
+		FoodText.text = Food.ToString("F1");
+	}
+
+	public void UpdateFoodIncome(float FoodIncome = 0) {
+		FoodIncomeText.text = FoodIncome.ToString();
+	}
+
+	public void UpdateFoodOutcome(float FoodConsuming = 0) {
+		FoodOutcomeText.text = FoodConsuming.ToString("F1");
+	}
+
+	public void UpdatePopulation(float PopulationCurrent = 1) {
+		PopulationText.text = PopulationCurrent.ToString("F0");
+	}
+
+	public void UpdatePopulationCeiling(int PopulationCeiling = 1) {
+		PopulationCeilingText.text = PopulationCeiling.ToString();
 	}
 
 	public void SetRed() {
 		FoodText.color = Color.red;
+		IncomeText.color = Color.red;
 	}
 
 	public void SetGreen() {
 		FoodText.color = Color.green;
+		IncomeText.color = Color.green;
 	}
 
 	public void SetBlack() {
 		FoodText.color = Color.black;
+		IncomeText.color = Color.black;
 	}
 }
