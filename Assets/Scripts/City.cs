@@ -5,32 +5,32 @@ using UnityEngine;
 public class City : MonoBehaviour {
     // balancing values
     [SerializeField]
-    private int moneyPerJob = 2;                         // amount of money gained per one working people on factory
+    private int moneyPerJob = 2;                        // amount of money gained per one working people on factory
     [SerializeField]
-    private float foodPerFarm = 4f;                      // amount of produced food per one farm
+    private float foodPerFarm = 4f;                     // amount of produced food per one farm
     [SerializeField]
-    private int jobsPerFactory = 10;                     // number of jobs per one factory - extend JobCeiling
+    private int jobsPerFactory = 10;                    // number of jobs per one factory - extend JobCeiling
     [SerializeField]
-    private int houseCapacity = 5;                       // number of people per one house - extend PopulationCeiling
+    private int houseCapacity = 5;                      // number of people per one house - extend PopulationCeiling
     [SerializeField]
-    private float foodConsumingPerOnePeople = 0.5f;      // amount of food consumed per one people per one Day
+    private float foodConsumingPerOnePeople = 0.5f;     // amount of food consumed per one people per one Day
     [SerializeField]
-    private float foodFromOnePeople = 2.5f;              // food gain after one people has to be eaten
+    private float foodFromOnePeople = 2.5f;             // food gain after one people has to be eaten
     [SerializeField]
-    private float foodSafety = 2f;                       // safety multiplier for people population increasing
+    private float foodSafety = 3f;                      // safety multiplier for people population increasing
     [SerializeField]
-    private float badMoralePenalty = 0.33f;              // penalty to Money increasing from cannibalizm
+    private float badMoralePenalty = 0.33f;             // penalty to Money increasing from cannibalizm
     [SerializeField]
-    private float goodMoraleBonus = 1.2f;                // bonus to Money increasing 
+    private float goodMoraleBonus = 1.2f;               // bonus to Money increasing 
     [SerializeField]
-    private float staticPopulationRate = 0.025f;         // passive value for population incresing if there enough food
+    private float staticPopulationRate = 0.025f;        // passive value for population incresing if there enough food
     [SerializeField]
-    private int cannibalizmCooldown = 5;                 // 3 days cooldown before morale stabilize after cannibalizm act
+    private int cannibalizmCooldown = 5;                // 3 days cooldown before morale stabilize after cannibalizm act OR use N times per eaten human?
 
     public int Day { get; set; }
 
     // calculated values
-    public float Money { get; set; }                      // available amount of money = JobCurrent * moneyPerJob (max 1000000)
+    public float Money { get; set; }                    // available amount of money = JobCurrent * moneyPerJob (max 1000000)
     public float Income { get; set; }                   // amount of money earned per Day
     public float PopulationCurrent { get; set; }        // current amount of people
     public int PopulationCeiling { get; set; }          // #house * houseCapacity (max 1000000)
@@ -46,7 +46,6 @@ public class City : MonoBehaviour {
     //temporary effects switch
     private bool badMorale = false;                     // true - bad morale effect active - redure Money income
     private bool goodMorale = false;                    // true - good morale effect active - increase Money income
-    private bool cannibalizm = false;                   // true - if Food < FoodConsuming and people were eaten     // todo: if we need it?
 
     private int cannibalizmPenaltiTimer = 0;            // on '0' - bad morale after cannibalizm is gone
 
@@ -88,25 +87,11 @@ public class City : MonoBehaviour {
     }
 
     public void EndTurn() {                                         // called by OnClick() - TurnButton
-        
-        if (PopulationCeiling == 0) {
-            PopulationCeiling = 1;
-            PopulationCurrent = 1;
-        }
-        else if (PopulationCeiling != 0 && PopulationCurrent == 0) {
-            PopulationCurrent = 1;
-        }
-
         Day++;
         CalculateJobs();
         CalculateMoney();
         CalculateFoodFromFarm();
         CalculatePopulation();
-        if (cannibalizm) {
-            CalculateJobs();
-            CalculateFoodConsuming();
-            cannibalizm = false;
-        }
         MoraleReview();
         TextUpdate();
     }
@@ -137,12 +122,12 @@ public class City : MonoBehaviour {
         return FoodIncome;
     }
 
-    public void CalculateSpentMoney(float spent) {                    // called only if any buylding was built or sold
+    public void CalculateSpentMoney(float spent) {                  // called only if any buyldings was built (or road - destroyed)
         Money -= spent;
         uIController.UpdateMoney(Money);
     }
 
-    public void CalculateRefundMoney(float refund) {
+    public void CalculateRefundMoney(float refund) {                // called only if buyldings was destroyed
         Money += refund / 2;
         uIController.UpdateMoney(Money);
     }
@@ -159,30 +144,37 @@ public class City : MonoBehaviour {
 
     private void CalculatePopulation(bool trimCeiling = false) {    // called at the end of day or happens that PopulationCurrent > PopulationCeiling
         if (Food >= FoodConsuming && !trimCeiling) {
-            if (Food >= FoodConsuming + foodConsumingPerOnePeople * PopulationCurrent * badMoralePenalty) {
-                PopulationCurrent += PopulationCurrent * staticPopulationRate * ApplyMorale();
-            }
+            float popInc = PopulationCurrent * staticPopulationRate * ApplyMorale();
+            PopulationCurrent += (badMorale ? popInc / 10 : popInc);
         }
         else if (!trimCeiling) {
-            int loosingPeople = (int)PopulationCurrent / 10;
-            if ((int)PopulationCurrent % 10 != 0)
+            int loosingPeople = (int)PopulationCurrent / 10;        // loosing 1 per every 10
+            if ((int)PopulationCurrent % 10 != 0)                   
                 loosingPeople++;
-            cannibalizm = true;
             cannibalizmPenaltiTimer = cannibalizmCooldown;
             PopulationCurrent -= loosingPeople;
-
+            CalculateJobs();
             Food += loosingPeople * foodFromOnePeople;
         }
-        Food -= CalculateFoodConsuming();
-        if (PopulationCurrent > PopulationCeiling)
+        if (trimCeiling || PopulationCurrent > PopulationCeiling)   // if house was destroyed or PopulationCurrent reached PopulationCeiling value
             PopulationCurrent = PopulationCeiling;
+        Food -= CalculateFoodConsuming();
+
+        if (PopulationCeiling == 0) {                               // there always need to be the One if the others were gone
+            PopulationCeiling = 1;
+            PopulationCurrent = 1;
+        }
+        else if (PopulationCurrent == 0) {
+            PopulationCurrent = 1;
+        }
+
         uIController.UpdatePopulation(PopulationCurrent);
     }
 
     private float ApplyMorale() {                                   // affect Population incrising and Income
-        return (badMorale ? badMoralePenalty : 1f)                  // sets badMoralePenalty if badMorale = true
-        * (goodMorale ? goodMoraleBonus : 1f);                      // sets goodMoralePenalty if goodMorale = true
-    }
+        return (badMorale ? badMoralePenalty : 1f)                  // sets badMoralePenalty if badMorale = true - *0.33
+        * (goodMorale ? goodMoraleBonus : 1f);                      // sets goodMoraleBonus if goodMorale = true - *1.2
+    }                                                               // if both false then use default multiplier - *1
 
     private float CalculateMoneyIncome() {                          // called at the end of day
         if (JobCeiling != 0) {
@@ -192,7 +184,7 @@ public class City : MonoBehaviour {
             return Income;
         }
         else
-            return Income = 0.4f;
+            return Income = PopulationCurrent * 0.2f;               // todo: move hardcoded number to balancing variables above
     }
 
     private void CalculateFoodFromFarm() {                          // called at the end of day
@@ -211,10 +203,10 @@ public class City : MonoBehaviour {
         if (cannibalizmPenaltiTimer > 0) {
             badMorale = true;
             goodMorale = false;
-        } 
-        else if (Food > FoodConsuming * goodMoraleBonus && !badMorale) {
+        }
+        else if (Food > FoodConsuming * 5 && !badMorale && FoodConsuming != 0) {          // todo: move hardcoded number to balancing variables above 
             goodMorale = true;
-        } 
+        }
         else if (Food > FoodConsuming * foodSafety) {
             badMorale = false;
             goodMorale = false;
