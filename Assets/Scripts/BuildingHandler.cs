@@ -46,7 +46,10 @@ public class BuildingHandler : MonoBehaviour {
 				else if (!creation && board.CheckForBuildinginPosition(gridPosition) != null) {
 					city.buildingCounts[board.CheckForBuildinginPosition(gridPosition).id]--;
 					UpdatingAfterInteraction(board.CheckForBuildinginPosition(gridPosition).id);
-					city.CalculateRefundMoney(board.CheckForBuildinginPosition(gridPosition).cost);
+					if (board.CheckForBuildinginPosition(gridPosition).id != 0)
+						city.CalculateRefundMoney(board.CheckForBuildinginPosition(gridPosition).cost);
+					else
+						city.CalculateSpentMoney(board.CheckForBuildinginPosition(gridPosition).cost / 2); 
 					board.RemoveBuilding(gridPosition);
 				}
 			}
@@ -67,6 +70,9 @@ public class BuildingHandler : MonoBehaviour {
 				break;	
 			case (int)City.buildingsList.factory :
 				city.CalculateJobCeiling();
+				break;
+			case(int)City.buildingsList.road :
+				//Debug.Log("Remove road: -2$");
 				break;
 			default:
 				throw new ArgumentException();

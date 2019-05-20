@@ -30,7 +30,7 @@ public class City : MonoBehaviour {
     public int Day { get; set; }
 
     // calculated values
-    public int Money { get; set; }                      // available amount of money = JobCurrent * moneyPerJob (max 1000000)
+    public float Money { get; set; }                      // available amount of money = JobCurrent * moneyPerJob (max 1000000)
     public float Income { get; set; }                   // amount of money earned per Day
     public float PopulationCurrent { get; set; }        // current amount of people
     public int PopulationCeiling { get; set; }          // #house * houseCapacity (max 1000000)
@@ -51,7 +51,7 @@ public class City : MonoBehaviour {
     private int cannibalizmPenaltiTimer = 0;            // on '0' - bad morale after cannibalizm is gone
 
     // maximum values
-    private const int MAX_MONEY = 1000000;
+    private const float MAX_MONEY = 1000000f;
     private const int MAX_INCOME = 99998;
     private const float MAX_FOOD = 1000000f;
     private const float MAX_FOOD_INCOME = 50000f;
@@ -62,7 +62,8 @@ public class City : MonoBehaviour {
 
     // using for buildingCounts access to appropriate values
     public enum buildingsList {
-        house = 1,
+        road,
+        house,
         farm,
         factory
     }
@@ -72,7 +73,7 @@ public class City : MonoBehaviour {
         uIController = FindObjectOfType<UIController>();
         PopulationCeiling = 1;
         PopulationCurrent = 1;
-        Money = 500;
+        Money = 500f;
 
         uIController.UpdateDay();
         uIController.UpdateMoney(Money);
@@ -136,12 +137,12 @@ public class City : MonoBehaviour {
         return FoodIncome;
     }
 
-    public void CalculateSpentMoney(int spent) {                    // called only if any buylding was built or sold
+    public void CalculateSpentMoney(float spent) {                    // called only if any buylding was built or sold
         Money -= spent;
         uIController.UpdateMoney(Money);
     }
 
-    public void CalculateRefundMoney(int refund) {
+    public void CalculateRefundMoney(float refund) {
         Money += refund / 2;
         uIController.UpdateMoney(Money);
     }
@@ -151,7 +152,7 @@ public class City : MonoBehaviour {
     }
 
     private void CalculateMoney() {                                 // called at the end of day
-        Money += Mathf.RoundToInt(CalculateMoneyIncome());
+        Money += CalculateMoneyIncome();
         if (Money > MAX_MONEY)
             Money = MAX_MONEY;
     }
@@ -191,7 +192,7 @@ public class City : MonoBehaviour {
             return Income;
         }
         else
-            return Income = 0.6f;
+            return Income = 0.4f;
     }
 
     private void CalculateFoodFromFarm() {                          // called at the end of day
