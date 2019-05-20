@@ -38,12 +38,12 @@ public class UIController : MonoBehaviour {
 		JobCeilingText.text = JobCeiling.ToString();
 	}
 
-	public void UpdateMoney(float Money = 0f) {
-		MoneyText.text = Money.ToString("F0");
+	public void UpdateMoney(float Money = 0) {
+		MoneyText.text = Money.ToString("F1");
 	}
 
 	public void UpdateIncome(float Income = 0) {
-		IncomeText.text = Income.ToString();
+		IncomeText.text = Income.ToString("F2");
 	}
 
 	public void UpdateFood(float Food = 0) {
