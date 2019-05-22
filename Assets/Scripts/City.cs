@@ -184,7 +184,7 @@ public class City : MonoBehaviour {
             return Income;
         }
         else
-            return Income = PopulationCurrent * 0.2f;               // todo: move hardcoded number to balancing variables above
+            return Income = PopulationCurrent * badMoralePenalty;   // only if JobCeiling == 0
     }
 
     private void CalculateFoodFromFarm() {                          // called at the end of day
@@ -203,13 +203,16 @@ public class City : MonoBehaviour {
         if (cannibalizmPenaltiTimer > 0) {
             badMorale = true;
             goodMorale = false;
+            uIController.SetRed();
         }
-        else if (Food > FoodConsuming * 5 && !badMorale && FoodConsuming != 0) {          // todo: move hardcoded number to balancing variables above 
+        else if (Food > FoodConsuming * foodSafety * 2 && !badMorale && FoodConsuming < foodConsumingPerOnePeople) {
             goodMorale = true;
+            uIController.SetGreen();
         }
         else if (Food > FoodConsuming * foodSafety) {
             badMorale = false;
             goodMorale = false;
+            uIController.SetBlack();
         }
         cannibalizmPenaltiTimer--;
     }
@@ -223,13 +226,5 @@ public class City : MonoBehaviour {
         uIController.UpdateJob(JobCurrent);
         uIController.UpdateMoney(Money);
         uIController.UpdateIncome(Income);
-
-
-        if (goodMorale)
-            uIController.SetGreen();
-        else if (badMorale)
-            uIController.SetRed();
-        else
-            uIController.SetBlack();
     }
 }
